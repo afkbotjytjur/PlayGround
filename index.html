@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#101a13" />
+  <title>JURASSIC SURVIVAL: LOST WORLD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}</script>
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="world" aria-label="3D Jurassic survival game"></canvas>
+    <div class="vignette"></div>
+    <div class="topbar">
+      <div class="brand"><span class="brand-mark">JW</span><div><strong>JURASSIC SURVIVAL</strong><small>LOST WORLD <i>•</i> SECTOR 07</small></div></div>
+      <div class="location"><span class="live-dot"></span><span id="biome-label">THE FERN BASIN</span><b id="clock">06:42</b></div>
+      <button class="icon-button" id="pause-btn" title="Pause (Esc)"><span>Ⅱ</span></button>
+    </div>
+    <section class="mission-card"><div class="mission-kicker"><span>FIELD JOURNAL</span><span id="mission-count">01 / 04</span></div><h2 id="mission-title">A PLACE TO BEGIN</h2><p id="mission-copy">Gather branches and stone. The island won't wait.</p><div class="mission-progress"><i id="mission-progress"></i></div></section>
+    <div class="threat" id="threat"><span class="threat-icon">!</span><div><b>APEX PREDATOR NEARBY</b><small>Keep quiet. Find cover.</small></div><span class="threat-pulse"></span></div>
+    <div class="hud-left">
+      <div class="survivor-card"><div class="portrait"><span>✦</span><i></i></div><div class="survivor-info"><div class="survivor-name">SURVIVOR <span>LV. 01</span></div><div class="stat-row"><span class="stat-icon health">✚</span><div class="bar"><i id="health-bar"></i></div><b id="health-value">100</b></div><div class="stat-row"><span class="stat-icon food">◒</span><div class="bar"><i id="hunger-bar"></i></div><b id="hunger-value">82</b></div><div class="stat-row"><span class="stat-icon water">◉</span><div class="bar"><i id="thirst-bar"></i></div><b id="thirst-value">76</b></div><div class="stat-row"><span class="stat-icon stamina">ϟ</span><div class="bar"><i id="stamina-bar"></i></div><b id="stamina-value">100</b></div></div></div>
+      <div class="condition-row"><span>BODY TEMP</span><div class="temp-track"><i id="temp-bar"></i></div><b id="temp-value">36.8°</b><span id="condition">STABLE</span></div>
+    </div>
+    <div class="hud-right"><div class="compass"><span>N</span><div class="compass-line"></div><b id="heading">E  •  084°</b></div><button class="map-button" id="map-btn"><span>⌖</span> ISLAND MAP <kbd>M</kbd></button></div>
+    <div class="interaction" id="interaction"><span class="keycap">E</span><div><b id="interact-title">GATHER BRANCH</b><small id="interact-detail">Loose wood • 1.8m</small></div><span class="interact-arrow">↗</span></div>
+    <div class="hotbar-wrap"><div class="hotbar-label"><span>QUICK ACCESS</span><span id="weapon-label">STONE SPEAR <i>•</i> 18 / 20</span></div><div class="hotbar" id="hotbar"></div></div>
+    <div class="bottom-left"><span class="weather-icon" id="weather-icon">☀</span><span id="weather-copy">CLEAR SKIES <i>•</i> 24°C</span><span class="sound-indicator">♫</span></div>
+    <div class="hint" id="hint">WASD MOVE <i>•</i> SPACE JUMP <i>•</i> E INTERACT <i>•</i> CLICK ATTACK</div>
+    <div class="touch-controls" id="touch-controls"><div class="touch-move"><button data-key="a">◀</button><button data-key="d">▶</button></div><div class="touch-actions"><button data-action="jump">↑</button><button data-action="attack">⚔</button><button data-action="interact">E</button></div></div>
+    <div class="toast" id="toast"></div>
+    <div class="screen" id="start-screen"><div class="screen-backdrop"></div><div class="title-block"><div class="eyebrow"><span></span> SURVIVAL LOG // DAY 01</div><h1>JURASSIC<br><em>SURVIVAL</em></h1><div class="title-rule"><span></span> LOST WORLD</div><p>You woke beneath a broken canopy.<br>The island is alive. Make it to nightfall.</p><button class="primary-button" id="start-btn">ENTER THE ISLAND <span>→</span></button><div class="start-note">WASD TO MOVE &nbsp;·&nbsp; E TO GATHER &nbsp;·&nbsp; I INVENTORY &nbsp;·&nbsp; C CRAFT</div></div><div class="start-footer"><span>ISLA NUBLAR RESEARCH ZONE</span><span>NO EXTRACTION SIGNAL</span></div></div>
+    <div class="panel hidden" id="game-panel"><div class="panel-card"><div class="panel-head"><div><span class="panel-kicker" id="panel-kicker">FIELD EQUIPMENT</span><h2 id="panel-title">INVENTORY</h2></div><button class="close-button" id="close-panel">×</button></div><div id="panel-content"></div><div class="panel-footer"><span>ESC TO RETURN TO THE ISLAND</span><span id="panel-footer-right">SURVIVAL SYSTEMS ONLINE</span></div></div></div>
+    <div class="panel hidden" id="pause-panel"><div class="panel-card pause-card"><div class="panel-head"><div><span class="panel-kicker">FIELD PAUSED</span><h2>TAKE A BREATH</h2></div><button class="close-button" id="resume-x">×</button></div><p class="pause-copy">The island keeps moving, even when you don't.</p><div class="pause-actions"><button class="primary-button" id="resume-btn">RESUME SURVIVAL <span>→</span></button><button class="secondary-button" id="settings-btn">AUDIO SETTINGS <span>♫</span></button></div><div class="settings-row"><label for="volume">AMBIENCE</label><input id="volume" type="range" min="0" max="100" value="38"><span id="volume-value">38%</span></div><div class="panel-footer"><span>PROGRESS SAVES AUTOMATICALLY</span><span>LOST WORLD · V 1.0</span></div></div></div>
+    <div class="panel hidden" id="map-panel"><div class="panel-card map-card"><div class="panel-head"><div><span class="panel-kicker">ISLA NUBLAR // FIELD MAP</span><h2>THE FERN BASIN</h2></div><button class="close-button" data-close>×</button></div><div class="map-canvas" id="map-canvas"><div class="map-grid"></div><span class="map-zone zone-a">FERN BASIN</span><span class="map-zone zone-b">RIVER CUT</span><span class="map-zone zone-c">OLD STATION</span><span class="map-river"></span><span class="map-marker player-marker">▲<small>YOU</small></span><span class="map-marker camp-marker">⌂<small>CAMP</small></span><span class="map-marker dino-marker">◈</span></div><div class="map-legend"><span><i class="legend-player"></i> YOUR POSITION</span><span><i class="legend-camp"></i> CAMPFIRE</span><span><i class="legend-danger"></i> PREDATOR SIGN</span><span class="map-coords" id="map-coords">GRID F4 · 128m</span></div><div class="panel-footer"><span>THE MAP IS INCOMPLETE. EXPLORE TO REVEAL MORE.</span><span>FIELD MAP</span></div></div></div>
+    <div class="mobile-tip" id="mobile-tip">TOUCH CONTROLS ENABLED</div>
+  </main>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
