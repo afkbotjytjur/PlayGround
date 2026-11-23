@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#101a1a">
+  <title>LAST LIGHT — The Wilds Reclaimed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="game" aria-label="Last Light survival game"></canvas>
+    <div class="vignette"></div>
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">L</span><div><b>LAST LIGHT</b><small>FIELD SURVIVAL / SECTOR 04</small></div></div>
+      <div class="day-clock"><span class="live-dot"></span><span id="time-label">DAYLIGHT</span><i></i><strong id="clock">16:42</strong></div>
+      <div class="top-right"><span class="signal-icon">⌁</span><span>NO SIGNAL</span><span class="sector">ZONE <b>04</b></span></div>
+    </header>
+    <section class="hud" id="hud" aria-label="Survival status">
+      <div class="vitals panel">
+        <div class="hud-heading"><span>VITALS</span><span class="hud-tag">FIELD KIT</span></div>
+        <div class="meter-row"><span class="meter-icon heart">♥</span><div class="meter-copy"><div class="meter-label"><span>HEALTH</span><b id="health-value">100</b></div><div class="meter-track"><i id="health-bar" class="health-fill"></i></div></div></div>
+        <div class="meter-row"><span class="meter-icon bolt">ϟ</span><div class="meter-copy"><div class="meter-label"><span>STAMINA</span><b id="stamina-value">100</b></div><div class="meter-track"><i id="stamina-bar" class="stamina-fill"></i></div></div></div>
+        <div class="meter-row"><span class="meter-icon light-icon">◉</span><div class="meter-copy"><div class="meter-label"><span>LIGHT / FLARE</span><b id="light-value">72</b></div><div class="meter-track"><i id="light-bar" class="light-fill"></i></div></div></div>
+      </div>
+      <div class="objective panel"><span class="eyebrow">CURRENT OBJECTIVE</span><b>REACH THE SAFE ZONE</b><span class="objective-line"><i></i>Keep moving. Stay quiet.</span></div>
+      <div class="inventory panel">
+        <div class="hud-heading"><span>FIELD SUPPLIES</span><span id="pickup-flash">+ SUPPLIES</span></div>
+        <div class="inventory-grid">
+          <div class="inv-item"><span class="inv-icon med">✚</span><div><b id="med-count">1</b><small>MEDKIT <kbd>1</kbd></small></div></div>
+          <div class="inv-item"><span class="inv-icon battery">ϟ</span><div><b id="pack-count">1</b><small>LIGHT PACK <kbd>2</kbd></small></div></div>
+          <div class="inv-item"><span class="inv-icon scrap">◆</span><div><b id="scrap-count">00</b><small>SCRAP</small></div></div>
+          <div class="inv-item"><span class="inv-icon lure">◉</span><div><b id="lure-count">3</b><small>DECOYS <kbd>G</kbd></small></div></div>
+        </div>
+      </div>
+    </section>
+    <div class="threat-banner" id="threat-banner"><span>⚠</span><b>HEAVY MOVEMENT</b><small>INCOMING — GET LOW</small></div>
+    <div class="controls-hint" id="controls-hint"><span class="keycap">A</span><span class="keycap">D</span><span class="hint-label">MOVE</span><span class="hint-sep"></span><span class="keycap wide">SHIFT</span><span class="hint-label">SPRINT</span><span class="keycap">SPACE</span><span class="hint-label">JUMP</span><span class="keycap">S</span><span class="hint-label">HIDE</span></div>
+    <div class="toast" id="toast"></div>
+    <div class="crosshair" id="crosshair">◌</div>
+    <section class="overlay" id="start-overlay">
+      <div class="overlay-card start-card">
+        <div class="overline"><span class="live-dot"></span> FIELD REPORT  //  04.19.2049</div>
+        <h1>THE WILD<br><em>INHERITANCE</em></h1>
+        <p class="story">The city fell quiet three weeks ago. The things that came back with the green did not.</p>
+        <div class="briefing"><span>MISSION</span><b>Cross the quarantine line. Reach the evacuation beacon.</b><small>Stay alive. Make every light count.</small></div>
+        <button id="start-button" class="action-button">ENTER THE RUINS <span>→</span></button>
+        <div class="start-foot"><span>WASD / ARROWS TO MOVE</span><span>HEADPHONES RECOMMENDED</span></div>
+      </div>
+    </section>
+    <section class="overlay hidden" id="end-overlay">
+      <div class="overlay-card end-card">
+        <div class="overline" id="end-kicker"><span class="live-dot"></span> SIGNAL LOST</div>
+        <h2 id="end-title">YOU DIDN'T<br><em>MAKE IT OUT.</em></h2>
+        <p id="end-copy">The city keeps what it takes.</p>
+        <div class="run-stats"><div><small>DISTANCE</small><b id="end-distance">0 <i>m</i></b></div><div><small>SALVAGED</small><b id="end-score">0</b></div><div><small>TIME ALIVE</small><b id="end-time">00:00</b></div></div>
+        <button id="restart-button" class="action-button">RUN IT BACK <span>↻</span></button>
+        <div class="start-foot"><span>THE WILDS ARE STILL WAITING</span><span>SECTOR 04 // 2049</span></div>
+      </div>
+    </section>
+    <div class="mobile-controls" id="mobile-controls"><button data-action="left">◀</button><button data-action="right">▶</button><button data-action="jump">↑</button><button data-action="crouch">⌄</button></div>
+    <footer class="bottomline"><span>SECTOR 04 — OLD CITY</span><span id="distance">0000 <i>m</i></span><span>STAY IN THE SHADOWS</span></footer>
+  </main>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
