@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#101c1a" />
+  <title>Wild Survival — The Lost Island</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="game"></canvas>
+    <div class="vignette"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Wild Survival home"><span class="brand-mark">W<span>·</span></span><span class="brand-copy">WILD<span>SURVIVAL</span></span></a>
+      <div class="location"><span class="loc-dot"></span><div><b>CRASH BEACH</b><small id="time-label">DAY 01 · 08:14</small></div></div>
+      <div class="top-actions"><button class="icon-btn map-btn" id="map-button" title="Map (M)">⌖</button><button class="icon-btn" id="pause-button" title="Pause (Esc)">Ⅱ</button></div>
+    </header>
+    <section class="mission-card"><div class="mission-kicker"><span class="mission-icon">✦</span> CURRENT OBJECTIVE</div><div class="mission-title" id="objective-title">A place to call home</div><div class="mission-copy" id="objective-copy">Gather branches and stone. Craft a stone axe to collect wood.</div><div class="mission-progress"><div id="objective-fill"></div></div><small id="objective-progress">0 / 3 BRANCHES</small></section>
+    <section class="survival-panel" aria-label="Survival status">
+      <div class="survival-heading"><span>VITALS</span><span id="weather-label">☀ CLEAR</span></div>
+      <div class="stat-row"><span class="stat-icon heart">♥</span><div class="stat-content"><div class="stat-label"><span>HEALTH</span><b id="health-value">100</b></div><div class="meter"><i class="health-fill" id="health-bar"></i></div></div></div>
+      <div class="stat-row"><span class="stat-icon hunger">◒</span><div class="stat-content"><div class="stat-label"><span>HUNGER</span><b id="hunger-value">82</b></div><div class="meter"><i class="hunger-fill" id="hunger-bar"></i></div></div></div>
+      <div class="stat-row"><span class="stat-icon thirst">◉</span><div class="stat-content"><div class="stat-label"><span>THIRST</span><b id="thirst-value">74</b></div><div class="meter"><i class="thirst-fill" id="thirst-bar"></i></div></div></div>
+      <div class="stat-row"><span class="stat-icon stamina">ϟ</span><div class="stat-content"><div class="stat-label"><span>STAMINA</span><b id="stamina-value">100</b></div><div class="meter"><i class="stamina-fill" id="stamina-bar"></i></div></div></div>
+      <div class="temp-row"><span>◌ BODY TEMPERATURE</span><b>36.6°</b></div>
+    </section>
+    <div class="compass"><span class="compass-n">N</span><div class="compass-line"></div><span class="compass-s">S</span><span class="compass-tick"></span><span class="compass-e">E</span><span class="compass-w">W</span></div>
+    <div class="toast" id="toast"></div>
+    <div class="center-message" id="center-message"><span class="message-symbol">✧</span><span id="message-text">YOU MADE IT</span></div>
+    <div class="interaction" id="interaction"><span class="keycap">E</span><span><b id="interact-title">Pick up</b><small id="interact-detail">Driftwood</small></span><span class="interact-arrow">↵</span></div>
+    <div class="crosshair"><i></i><i></i></div>
+    <div class="bottom-left"><div class="day-pill"><span class="sun-symbol">◷</span><span id="day-label">DAY 01</span><span class="pill-divider"></span><span id="season-label">TROPICAL · 28°C</span></div><div class="hint" id="controls-hint">W A S D <span>MOVE</span><kbd>SHIFT</kbd> <span>SPRINT</span><kbd>E</kbd> <span>INTERACT</span></div></div>
+    <div class="bottom-right">
+      <button class="tool-button" id="tool-button"><span class="tool-emoji">⛏</span><span class="tool-name" id="equipped-name">EMPTY HANDS</span><span class="tool-key">1</span></button>
+      <button class="quick-slot active" data-slot="0"><span>🥥</span><small>2</small><kbd>2</kbd></button><button class="quick-slot" data-slot="1"><span>🪵</span><small id="wood-count">0</small><kbd>3</kbd></button><button class="quick-slot" data-slot="2"><span>🪨</span><small id="stone-count">0</small><kbd>4</kbd></button>
+      <button class="bag-button" id="inventory-button"><span>▤</span><b>BAG</b><small id="weight-label">0 / 24 kg</small><kbd> I </kbd></button>
+    </div>
+    <div class="mobile-controls" id="mobile-controls"><div class="joy-base" id="joystick"><div class="joy-knob"></div></div><div class="mobile-actions"><button data-action="jump">↑</button><button data-action="interact" class="mobile-interact">E</button><button data-action="attack">⚒</button><button data-action="sprint">⇧</button></div><div class="look-zone" id="look-zone"></div></div>
+    <div class="panel-backdrop" id="panel-backdrop"></div>
+    <section class="game-panel" id="inventory-panel"><div class="panel-header"><div><small>YOUR PACK</small><h2>Inventory</h2></div><button class="close-btn">×</button></div><div class="inventory-layout"><div><div class="section-label">CARRIED ITEMS <span id="inventory-weight">0 / 24 KG</span></div><div class="inventory-grid" id="inventory-grid"></div></div><aside class="inventory-side"><div class="character-card"><div class="silhouette">◉</div><b>ALEX CARTER</b><small>STRANDED SURVIVOR</small></div><div class="equipment"><div class="section-label">EQUIPPED</div><div class="equip-slot"><span>⚒</span><div><b>Hands</b><small id="equipment-label">Nothing equipped</small></div></div></div><div class="pack-note">A little preparation goes a long way. Keep an eye on your weight.</div></aside></div><div class="panel-footer"><span>Click an item to use or equip it</span><kbd>I · ESC</kbd></div></section>
+    <section class="game-panel crafting-panel" id="crafting-panel"><div class="panel-header"><div><small>MAKE SOMETHING USEFUL</small><h2>Crafting</h2></div><button class="close-btn">×</button></div><div class="craft-tabs"><button class="craft-tab selected">ALL RECIPES <span>04</span></button><button class="craft-tab">TOOLS</button><button class="craft-tab">SURVIVAL</button><span class="bench-status">◉ HAND CRAFTING</span></div><div class="recipe-list" id="recipe-list"></div><div class="panel-footer"><span>Crafting consumes materials when complete</span><kbd>C · ESC</kbd></div></section>
+    <section class="game-panel pause-panel" id="pause-panel"><div class="panel-header"><div><small>TAKE A BREATH</small><h2>Paused</h2></div><button class="close-btn">×</button></div><div class="pause-content"><p>The island isn't going anywhere.<br><span>Take a moment. Plan your next move.</span></p><button class="primary-button" id="resume-button">BACK TO THE ISLAND <span>→</span></button><div class="pause-foot">PROGRESS SAVES AUTOMATICALLY <span>·</span> LOCAL SAVE</div></div></section>
+    <section class="game-panel map-panel" id="map-panel"><div class="panel-header"><div><small>UNCHARTED TERRITORY</small><h2>Island map</h2></div><button class="close-btn">×</button></div><div class="map-art"><div class="map-island"><span class="map-mountain">▲ ▲</span><span class="map-forest">♣ ♣ ♣</span><span class="map-beach">⌖</span><span class="map-pin">YOU ARE HERE</span></div><span class="map-legend"><i></i> Explored shoreline <b>·</b> interior unknown</span></div><div class="map-footer"><span>More of the island reveals itself as you explore.</span><kbd>M · ESC</kbd></div></section>
+    <div class="start-screen" id="start-screen"><div class="start-backdrop"></div><div class="start-content"><div class="start-eyebrow"><span></span> A SURVIVAL STORY</div><h1>THE LOST<br><em>ISLAND</em></h1><p>The storm took everything. The island will ask for more.<br>Find your footing. Make it through the night.</p><button class="start-button" id="start-button"><span>STEP ASHORE</span><b>→</b></button><div class="start-meta"><span>◈ &nbsp; SINGLE PLAYER</span><span>◷ &nbsp; SURVIVE THE WILD</span></div></div><div class="start-footer">WILD SURVIVAL <span>·</span> DAY 01 — CRASH BEACH</div><div class="start-art-caption">SOUTH PACIFIC<br><b>UNKNOWN ISLAND</b></div></div>
+    <div id="loading" class="loading"><span class="loader"></span><span>PREPARING YOUR ISLAND</span></div>
+  </main>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
