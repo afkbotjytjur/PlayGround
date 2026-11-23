@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#101a17" />
+  <title>Wild Survival — The Lost Island</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="game-shell" aria-label="Wild Survival game">
+    <canvas id="world" aria-label="Island survival game world"></canvas>
+    <div class="vignette"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Wild Survival home"><span class="brand-mark">W</span><span>WILD<span class="brand-light">SURVIVAL</span></span></a>
+      <div class="location"><span class="pulse"></span><span id="location-name">CRASH BEACH</span><i>•</i><span id="clock">08:15</span></div>
+      <div class="top-actions"><button class="icon-btn" data-panel="map" title="Map">⌖</button><button class="icon-btn" data-panel="settings" title="Settings">⚙</button><button class="pause-btn" id="pause-button">Ⅱ <span>PAUSE</span></button></div>
+    </header>
+    <section class="hud-left" aria-label="Survival status">
+      <div class="player-chip"><div class="avatar">AC</div><div><strong>ALEX CARTER</strong><small>ISLANDER · DAY <span id="day-count">01</span></small></div><span class="level">01</span></div>
+      <div class="survival-card">
+        <div class="status-row"><span class="status-icon heart">♥</span><div class="status-info"><div><b>VITALS</b><span id="health-value">100%</span></div><div class="meter"><i id="health-meter" class="health-fill"></i></div></div></div>
+        <div class="status-row"><span class="status-icon food">◒</span><div class="status-info"><div><b>NOURISHMENT</b><span id="hunger-value">82%</span></div><div class="meter"><i id="hunger-meter" class="hunger-fill"></i></div></div></div>
+        <div class="status-row"><span class="status-icon water">◉</span><div class="status-info"><div><b>HYDRATION</b><span id="thirst-value">68%</span></div><div class="meter"><i id="thirst-meter" class="thirst-fill"></i></div></div></div>
+        <div class="status-row"><span class="status-icon stamina">ϟ</span><div class="status-info"><div><b>STAMINA</b><span id="stamina-value">100%</span></div><div class="meter"><i id="stamina-meter" class="stamina-fill"></i></div></div></div>
+      </div>
+      <div class="weather-chip"><span id="weather-icon">☀</span><div><b id="weather-name">CLEAR SKIES</b><small>24° · LIGHT BREEZE</small></div></div>
+    </section>
+    <section class="quest-card"><div class="quest-top"><span class="eyebrow">SURVIVAL JOURNAL</span><span class="quest-count">01 / 06</span></div><h2 id="quest-title">A FRESH START</h2><p id="quest-description">The tide left a few useful things behind. Gather what you can.</p><div class="quest-objective"><span class="objective-dot"></span><span id="objective-text">Collect driftwood</span><span class="objective-progress" id="objective-progress">0 / 3</span></div><button class="journal-link" data-panel="missions">VIEW JOURNAL <span>↗</span></button></section>
+    <div class="interaction" id="interaction"><span class="keycap">E</span><span id="interaction-label">COLLECT DRIFTWOOD</span></div>
+    <div class="toast" id="toast"><span>✦</span><span id="toast-text">Driftwood collected</span></div>
+    <div class="bottom-left"><button class="round-button" data-panel="inventory" title="Inventory">▦</button><button class="round-button" data-panel="crafting" title="Crafting">⚒</button><button class="round-button" data-panel="build" title="Build">⌂</button><button class="round-button" data-panel="map" title="Map">⌖</button><span class="bottom-label">FIELD KIT</span></div>
+    <div class="hotbar"><div class="hotbar-slot active"><span class="slot-key">1</span><span class="slot-icon">🪓</span><small>STONE AXE</small></div><div class="hotbar-slot"><span class="slot-key">2</span><span class="slot-icon">🗡</span><small>SPEAR</small></div><div class="hotbar-slot"><span class="slot-key">3</span><span class="slot-icon">◉</span><small>COCONUT</small></div><div class="hotbar-slot"><span class="slot-key">4</span><span class="slot-icon">＋</span><small>BANDAGE</small></div><div class="hotbar-hint">SCROLL TO SWITCH</div></div>
+    <div class="compass"><span>N</span><div class="compass-line"></div><span class="compass-dot"></span><span>S</span></div>
+    <div class="mobile-controls"><div class="joystick" id="joystick"><div class="joy-knob" id="joy-knob"></div></div><div class="mobile-actions"><button data-action="interact">↗<small>USE</small></button><button data-action="jump">↑<small>JUMP</small></button><button data-action="attack">⚔<small>HIT</small></button><button data-action="sprint">ϟ<small>RUN</small></button></div></div>
+    <div class="menu-screen" id="main-menu"><div class="menu-copy"><div class="game-kicker"><span></span> A SURVIVAL JOURNEY</div><h1>WILD<br><em>SURVIVAL</em></h1><p class="subtitle">THE LOST ISLAND</p><p class="menu-description">Alone. Adrift. And far from anywhere.<br>Every sunrise is a second chance.</p><button class="primary-button" id="new-game"><span>BEGIN YOUR STORY</span><b>→</b></button><button class="text-button" id="continue-game">CONTINUE JOURNEY <span>↗</span></button><div class="menu-footer">OFFLINE ADVENTURE <i>·</i> SINGLE PLAYER <i>·</i> BUILD 01.08</div></div><div class="menu-side"><span class="side-line"></span><span>01 — 08</span><small>CRASH<br>BEACH</small></div></div>
+    <div class="panel-backdrop" id="panel-backdrop"><section class="panel" id="panel"><button class="panel-close" id="panel-close">×</button><div id="panel-content"></div></section></div>
+    <div class="pause-overlay" id="pause-overlay"><div class="pause-card"><span class="eyebrow">TAKE A BREATH</span><h2>PAUSED</h2><p>The island can wait a moment.</p><button class="primary-button" id="resume-game"><span>BACK TO THE ISLAND</span><b>→</b></button><button class="text-button" data-panel="settings">SETTINGS</button><button class="text-button" id="save-game">SAVE &amp; RETURN</button></div></div>
+    <div class="damage-flash" id="damage-flash"></div>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
