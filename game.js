@@ -5,7 +5,7 @@
   const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
   const rand = (a,b) => a + Math.random()*(b-a);
   let W=innerWidth,H=innerHeight,DPR=1, started=false, paused=false, panelMode='', last=0, gameTime=8.25, toastTimer=0, lastSave=0;
-  const player={x:490,y:470,dir:0,speed:160,health:100,hunger:82,thirst:68,stamina:100,wood:0,stone:0,fiber:0,berries:2,coconut:0,meat:0,water:1,axe:true,level:1};
+  const player={x:490,y:470,dir:0,targetDir:0,velX:0,velY:0,moveAnim:0,jump:0,gatherAnim:0,state:'idle',speed:160,health:100,hunger:82,thirst:68,stamina:100,wood:0,stone:0,fiber:0,berries:2,coconut:0,meat:0,water:1,axe:true,level:1};
   const inventory={Driftwood:0,Stone:0,PlantFiber:0,Coconut:0,WildBerries:2,CleanWater:1,RawMeat:0,StoneAxe:1,WoodenSpear:0,Bandage:1};
   const keys={}, world={width:1900,height:1400, camera:{x:0,y:0}, objects:[], animals:[], particles:[]};
   const quests=[
@@ -77,7 +77,28 @@
   }}
   function drawWreck(p){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(-.24);ellipse(0,9,83,15,'#354136',.26);polygon([[-75,-8],[-59,-23],[55,-25],[78,-13],[57,8],[-57,14]],'#c3b9a2');polygon([[-58,-17],[45,-20],[65,-10],[-52,-3]],'#ddd3b9');polygon([[-13,-24],[4,-33],[39,-48],[46,-42],[17,-19]],'#aba58e');polygon([[-23,-24],[-40,-41],[-47,-37],[-35,-21]],'#98937e');ctx.strokeStyle='#817b68';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-53,-8);ctx.lineTo(55,-11);ctx.moveTo(5,-20);ctx.lineTo(10,4);ctx.stroke();polygon([[-62,0],[-45,3],[-38,20],[-60,15]],'#716e60');ctx.restore()}
   function drawAnimal(a,t){if(!a.alive)return;let p=project(a.x+Math.sin(t+a.phase)*12,a.y+Math.cos(t*.7+a.phase)*8);ellipse(p.x,p.y+5,16,6,'#293b2e',.24);ellipse(p.x,p.y-5,11,7,'#8a7959');ellipse(p.x+10,p.y-9,6,6,'#907d5c');ctx.strokeStyle='#544938';ctx.lineWidth=2;for(let i=-1;i<=1;i+=2){ctx.beginPath();ctx.moveTo(p.x+i*7,p.y);ctx.lineTo(p.x+i*8,p.y+9);ctx.stroke()}ctx.beginPath();ctx.moveTo(p.x+8,p.y-14);ctx.lineTo(p.x+12,p.y-22);ctx.lineTo(p.x+15,p.y-14);ctx.stroke()}
-  function drawPlayer(){let p=project(player.x,player.y);ellipse(p.x,p.y+9,15,7,'#1b2c25',.34);ctx.save();ctx.translate(p.x,p.y);ctx.rotate(player.dir);ellipse(-2,-1,8,11,'#46513d');polygon([[-8,-7],[-2,-10],[5,-8],[9,4],[4,10],[-6,8]],'#647044');polygon([[-6,-8],[3,-8],[6,4],[-5,5]],'#b7a16e');ctx.strokeStyle='#dec99a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-4,-6);ctx.lineTo(-2,3);ctx.moveTo(3,-6);ctx.lineTo(5,2);ctx.stroke();ellipse(0,-10,5.5,6,'#b88260');ellipse(1,-12,6,4,'#342c25');ellipse(2,-11,2,1.5,'#201e1a');ctx.strokeStyle='#e3c18a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(4,-11);ctx.lineTo(5,-10);ctx.stroke();polygon([[-7,6],[-1,6],[-2,15],[-7,15]],'#473b30');polygon([[0,6],[6,6],[7,15],[1,15]],'#493b2c');ctx.fillStyle='#282921';ctx.fillRect(-8,14,7,3);ctx.fillRect(1,14,8,3);ctx.restore()}
+  function drawPlayer(){
+    let p=project(player.x,player.y), t=performance.now()/1000;
+    let moving=Math.hypot(player.velX,player.velY)>8;
+    let speedPhase=player.moveAnim;
+    let jumpLift=player.jump>0?Math.sin(Math.min(1,player.jump)*Math.PI)*9:0;
+    let legSwing=moving?Math.sin(speedPhase)*4:Math.sin(t*1.35)*.7;
+    let armSwing=moving?Math.sin(speedPhase+Math.PI)*4:Math.sin(t*1.35+1)*.8;
+    let breath=Math.sin(t*2.1)*.8;
+    ellipse(p.x,p.y+10+jumpLift*.12,15-jumpLift*.15,6,'#1b2c25',.34);
+    ctx.save();ctx.translate(p.x,p.y-jumpLift);ctx.rotate(player.dir);
+    ellipse(-2,-1+breath,8,11,'#46513d');
+    polygon([[-8,-7],[-2,-10],[5,-8],[9,4],[4,10],[-6,8]],'#647044');
+    polygon([[-6,-8],[3,-8],[6,4],[-5,5]],'#b7a16e');
+    ctx.strokeStyle='#dec99a';ctx.lineWidth=1;ctx.beginPath();
+    ctx.moveTo(-5,-5);ctx.lineTo(-6+armSwing,-6);ctx.moveTo(5,-5);ctx.lineTo(6-armSwing,-6);ctx.stroke();
+    ellipse(0,-10+breath*.25,5.5,6,'#b88260');ellipse(1,-12,6,4,'#342c25');ellipse(2,-11,2,1.5,'#201e1a');
+    ctx.strokeStyle='#e3c18a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(4,-11);ctx.lineTo(5,-10);ctx.stroke();
+    polygon([[-7,6],[-1+legSwing*.25,6],[-2+legSwing,15],[-7+legSwing,15]],'#473b30');
+    polygon([[0-legSwing*.25,6],[6,6],[7-legSwing,15],[1-legSwing,15]],'#493b2c');
+    ctx.fillStyle='#282921';ctx.fillRect(-8+legSwing,14,7,3);ctx.fillRect(1-legSwing,14,8,3);
+    ctx.restore();
+  }
   function nearObject(){let best=null,dist=83;for(const o of world.objects){if(!o.active)continue;let d=Math.hypot(o.x-player.x,o.y-player.y);if(d<dist){best=o;dist=d}}return best}
   function render(t){drawGround();for(const o of world.objects)drawObject(o);for(const a of world.animals)drawAnimal(a,t);drawPlayer();
     // soft day-night color grade
@@ -93,7 +114,37 @@
   }
   function advanceQuest(kind){if(questIndex>=quests.length)return;const q=quests[questIndex];if(kind===q[4]){questProgress++;if(questProgress>=q[3]){toast(`Journal updated · ${q[0]}`);questIndex++;questProgress=0;if(questIndex>=quests.length){$('#quest-title').textContent='THE ISLAND AWAITS';$('#quest-description').textContent='Make this island your own. The story is just beginning.';$('#objective-text').textContent='Explore, gather, survive';$('#objective-progress').textContent='∞'}}}}
   function gather(){const o=nearObject();if(!o){toast('Nothing close enough to collect');return}o.active=false;switch(o.type){case'driftwood':inventory.Driftwood++;toast('Driftwood collected');advanceQuest('Driftwood');break;case'stone':inventory.Stone++;toast('Smooth stone collected');advanceQuest('Stone');break;case'berry':inventory.WildBerries+=2;toast('Wild berries ×2');break;case'coconut':inventory.Coconut++;toast('Coconut collected');break;case'tree':inventory.Driftwood+=inventory.StoneAxe?3:1;toast(inventory.StoneAxe?'Chopped wood ×3':'Branch collected');break;case'bush':case'fern':inventory.PlantFiber+=2;toast('Plant fiber ×2');break;case'wreck':inventory.Driftwood+=2;inventory.CleanWater++;inventory.Bandage++;toast('Wreckage searched · useful supplies found');break;}updateHud();save(false)}
-  function move(dt){if(!started||paused||$('#panel-backdrop').classList.contains('open'))return;let x=input.x,y=input.y;if(keys.KeyA||keys.ArrowLeft)x-=1;if(keys.KeyD||keys.ArrowRight)x+=1;if(keys.KeyW||keys.ArrowUp)y-=1;if(keys.KeyS||keys.ArrowDown)y+=1;let mag=Math.hypot(x,y);if(mag){x/=mag;y/=mag;player.dir=Math.atan2(y,x);let running=input.sprint||keys.ShiftLeft||keys.ShiftRight;let cost=running?22:0;if(player.stamina>4||!running){let speed=player.speed*(running?1.52:1);player.x=clamp(player.x+x*speed*dt,35,world.width-35);player.y=clamp(player.y+y*speed*dt,35,world.height-35);player.stamina=clamp(player.stamina-cost*dt+(!running?11*dt:0),0,100)}}else player.stamina=clamp(player.stamina+14*dt,0,100);
+  function move(dt){
+    if(!started||paused||$('#panel-backdrop').classList.contains('open'))return;
+    // Touch input is quantized into four stable axes plus diagonals.  This prevents
+    // tiny thumb corrections from continuously spinning the character.
+    let x=input.x,y=input.y,mag=Math.hypot(x,y);
+    if(mag>0.18){
+      x/=mag;y/=mag;
+      const sectors=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+      let angle=Math.atan2(y,x),octant=Math.round(angle/(Math.PI/4));
+      if(octant<0)octant+=8;octant%=8;
+      const a=Math.cos(octant*Math.PI/4),b=Math.sin(octant*Math.PI/4);
+      x=Math.abs(a)<.5?0:(a>0?1:-1);y=Math.abs(b)<.5?0:(b>0?1:-1);
+      if(!x&&!y)return;
+      const running=input.sprint;
+      const targetSpeed=player.speed*(running?1.52:1);
+      player.velX+=(x*targetSpeed-player.velX)*Math.min(1,dt*8);
+      player.velY+=(y*targetSpeed-player.velY)*Math.min(1,dt*8);
+      player.x=clamp(player.x+player.velX*dt,35,world.width-35);
+      player.y=clamp(player.y+player.velY*dt,35,world.height-35);
+      player.targetDir=Math.atan2(player.velY,player.velX);
+      let diff=((player.targetDir-player.dir+Math.PI*3)%(Math.PI*2))-Math.PI;
+      player.dir+=diff*Math.min(1,dt*10);
+      player.moveAnim+=dt*(running?12:8);
+      player.state=running?'sprint':'walk';
+      player.stamina=clamp(player.stamina-(running?22*dt:0)+(!running?11*dt:0),0,100);
+    }else{
+      player.velX*=Math.pow(.0008,dt);player.velY*=Math.pow(.0008,dt);
+      player.state='idle';player.stamina=clamp(player.stamina+14*dt,0,100);
+    }
+    if(player.jump>0)player.jump=Math.max(0,player.jump-dt*1.8);
+    if(player.gatherAnim>0)player.gatherAnim=Math.max(0,player.gatherAnim-dt*2);
     world.camera.x+=(player.x-world.camera.x)*Math.min(1,dt*4.5);world.camera.y+=(player.y-world.camera.y)*Math.min(1,dt*4.5);
   }
   function update(dt){if(started&&!paused){move(dt);gameTime+=dt*.018;player.hunger=clamp(player.hunger-dt*.032,0,100);player.thirst=clamp(player.thirst-dt*.047,0,100);if(player.hunger===0||player.thirst===0)player.health=clamp(player.health-dt*.8,0,100);if(player.health<=0){toast('You are exhausted. Find food and water to recover.');player.health=30;player.hunger=30;player.thirst=30}updateHud();if(Date.now()-lastSave>45000){save(false);lastSave=Date.now()}}}
@@ -124,11 +175,11 @@
   function build(what){let cost=what==='fire'?{Driftwood:5,Stone:3}:{Driftwood:8,PlantFiber:5};if(!canAfford(cost)){toast('Not enough materials yet');return}spend(cost);const x=player.x+Math.cos(player.dir)*52,y=player.y+Math.sin(player.dir)*52;world.objects.push({type:'site',site:what,x,y,scale:1,active:true});if(what==='fire'){campfirePlaced=true;advanceQuest('Campfire')}else{shelterPlaced=true;advanceQuest('Shelter')}toast(what==='fire'?'Campfire built':'Shelter built · a safe place to rest');panelOpen('build');updateHud();save(false)}
   function useItem(name){if(name==='WildBerries'&&inventory.WildBerries>0){inventory.WildBerries--;player.hunger=clamp(player.hunger+20,0,100);toast('Berries eaten · nourishment restored')}else if(name==='Coconut'&&inventory.Coconut>0){inventory.Coconut--;player.hunger=clamp(player.hunger+12,0,100);player.thirst=clamp(player.thirst+28,0,100);toast('Fresh coconut · hunger and thirst restored')}else if(name==='CleanWater'&&inventory.CleanWater>0){inventory.CleanWater--;player.thirst=clamp(player.thirst+38,0,100);toast('Clean water · hydration restored')}else if(name==='Bandage'&&inventory.Bandage>0){inventory.Bandage--;player.health=clamp(player.health+35,0,100);toast('Bandage applied · health restored')}else{toast('Nothing to use')}updateHud();panelOpen('inventory');save(false)}
 
-  addEventListener('keydown',(e)=>{keys[e.code]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();if(e.code==='KeyE')gather();if(e.code==='Escape'){if($('#panel-backdrop').classList.contains('open')){$('#panel-backdrop').classList.remove('open')}else if(started){paused=!paused;$('#pause-overlay').classList.toggle('show',paused)}}});
-  addEventListener('keyup',(e)=>{keys[e.code]=false});
+  // Keyboard and mouse movement are intentionally disabled for the mobile-first game.
   document.querySelectorAll('[data-panel]').forEach(b=>b.addEventListener('click',()=>panelOpen(b.dataset.panel)));
-  document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('pointerdown',()=>{const action=b.dataset.action;if(action==='interact')gather();if(action==='jump')player.y-=18;if(action==='sprint')input.sprint=true;if(action==='attack'){const o=nearObject();if(o&&(o.type==='bush'||o.type==='tree'||o.type==='fern'))gather()}}));
-  document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('pointerup',()=>{if(b.dataset.action==='sprint')input.sprint=false}));
+  document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('pointerdown',(e)=>{e.preventDefault();const action=b.dataset.action;if(action==='interact'){player.gatherAnim=.8;gather()}if(action==='jump'&&player.jump<=0){player.jump=1;player.state='jump'}if(action==='sprint')input.sprint=true;if(action==='attack'){player.state='attack';player.gatherAnim=.5;const o=nearObject();if(o&&(o.type==='bush'||o.type==='tree'||o.type==='fern'))gather()}}));
+  document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('pointerup',(e)=>{e.preventDefault();if(b.dataset.action==='sprint')input.sprint=false}));
+  document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('pointercancel',()=>{if(b.dataset.action==='sprint')input.sprint=false}));
   $('#pause-button').addEventListener('click',()=>{if(!started)return;paused=!paused;$('#pause-overlay').classList.toggle('show',paused)});
   $('#resume-game').addEventListener('click',()=>{paused=false;$('#pause-overlay').classList.remove('show')});
   $('#new-game').addEventListener('click',()=>{try{localStorage.removeItem('wild-survival-save')}catch(e){};begin()});
@@ -138,7 +189,19 @@
   $('#panel-backdrop').addEventListener('click',(e)=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open')});
 
   const joystick=$('#joystick'),knob=$('#joy-knob');let stick=null;
-  function stickMove(e){if(!stick)return;const r=joystick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy;const len=Math.hypot(dx,dy),limit=r.width*.34;if(len>limit){dx=dx/len*limit;dy=dy/len*limit}knob.style.transform=`translate(${dx}px,${dy}px)`;input.x=dx/limit;input.y=dy/limit}
+  function stickMove(e){
+    if(!stick)return;
+    const r=joystick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    let dx=e.clientX-cx,dy=e.clientY-cy;
+    const len=Math.hypot(dx,dy),limit=r.width*.34;
+    if(len>limit){dx=dx/len*limit;dy=dy/len*limit}
+    const dead=.14;
+    let nx=Math.abs(dx/limit)<dead?0:dx/limit,ny=Math.abs(dy/limit)<dead?0:dy/limit;
+    const snap=Math.SQRT1_2;
+    if(nx&&ny){nx=Math.abs(nx)>snap?.707:(nx>0?.707:-.707);ny=Math.abs(ny)>snap?.707:(ny>0?.707:-.707)}
+    knob.style.transform=`translate(${nx*limit}px,${ny*limit}px)`;
+    input.x=nx;input.y=ny;
+  }
   joystick.addEventListener('pointerdown',(e)=>{stick=e.pointerId;joystick.setPointerCapture(e.pointerId);stickMove(e)});
   joystick.addEventListener('pointermove',stickMove);
   function stickEnd(e){if(stick!==e.pointerId)return;stick=null;knob.style.transform='translate(0,0)';input.x=0;input.y=0}
