@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#101813" />
+  <title>WILD SURVIVAL — The Verdant Expanse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="world" aria-label="Wild Survival game world"></canvas>
+    <div class="world-vignette"></div>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Wild Survival home"><span class="brand-mark">W</span><span class="brand-name">WILD<span> SURVIVAL</span><small>THE VERDANT EXPANSE</small></span></a>
+      <div class="location"><span class="live-dot"></span><div><strong id="location-name">Whispering Pines</strong><small id="weather-line">CLEAR SKIES · 22°C</small></div></div>
+      <div class="top-actions"><button class="icon-btn" id="map-toggle" aria-label="Toggle map" title="Map (M)">⌖</button><button class="icon-btn" id="sound-toggle" aria-label="Toggle sound" title="Sound">♫</button><button class="icon-btn" id="save-btn" aria-label="Save game" title="Save game">⌑</button><button class="avatar" title="Survivor profile">R</button></div>
+    </header>
+    <section class="status-panel glass">
+      <div class="survivor-row"><div class="survivor-avatar">✦</div><div><strong>THE STRANDED</strong><small>DAY <span id="day-number">01</span> <i>·</i> <span id="time-label">07:42</span></small></div><span class="level-pill">LVL 01</span></div>
+      <div class="stat-list">
+        <div class="stat"><span class="stat-icon heart">♥</span><div class="stat-track"><div class="stat-fill health-fill" id="health-fill"></div></div><span class="stat-label">HEALTH</span><b id="health-value">100</b></div>
+        <div class="stat"><span class="stat-icon food">◒</span><div class="stat-track"><div class="stat-fill hunger-fill" id="hunger-fill"></div></div><span class="stat-label">HUNGER</span><b id="hunger-value">82</b></div>
+        <div class="stat"><span class="stat-icon water">◉</span><div class="stat-track"><div class="stat-fill thirst-fill" id="thirst-fill"></div></div><span class="stat-label">THIRST</span><b id="thirst-value">76</b></div>
+        <div class="stat"><span class="stat-icon energy">ϟ</span><div class="stat-track"><div class="stat-fill stamina-fill" id="stamina-fill"></div></div><span class="stat-label">STAMINA</span><b id="stamina-value">100</b></div>
+      </div>
+      <div class="temp-row"><span>❄</span><div class="temp-track"><i></i></div><span>♨</span><b id="temperature">22°</b></div>
+      <div class="condition"><span class="condition-sun">☼</span><div><b id="condition-title">A fresh start</b><small id="condition-copy">Gather what you can before nightfall.</small></div></div>
+    </section>
+    <section class="quest-card glass"><div class="quest-head"><span class="quest-icon">✧</span><span>YOUR FIRST NIGHT</span><span class="quest-tag">MAIN</span></div><h2>Make this island<br>your own.</h2><p>Gather materials and craft a campfire before the sun goes down.</p><div class="quest-progress"><div class="progress-track"><i id="quest-progress"></i></div><b id="quest-count">0 / 3</b></div><div class="quest-tasks"><div class="quest-task" id="task-wood"><span>○</span> Gather wood <small id="task-wood-count">0 / 4</small></div><div class="quest-task" id="task-stone"><span>○</span> Gather stone <small id="task-stone-count">0 / 2</small></div><div class="quest-task" id="task-fire"><span>○</span> Craft a campfire</div></div><button class="text-link" id="quest-journal">VIEW JOURNAL <span>↗</span></button></section>
+    <div class="right-rail"><div class="mini-map glass"><div class="map-title"><span>FIELD MAP</span><button id="expand-map" aria-label="Expand map">↗</button></div><canvas id="minimap" width="240" height="160"></canvas><div class="map-coords"><span>◉ YOUR POSITION</span><span id="coords">128, 128</span></div></div><div class="time-card glass"><span class="sun-mark" id="sun-mark">☼</span><div><small>LOCAL TIME</small><strong id="clock">07:42 <i>AM</i></strong></div><div class="day-track"><i id="day-progress"></i><span>☾</span></div></div></div>
+    <div class="interaction-hint" id="interaction-hint"><kbd>E</kbd><span>Gather <b id="nearby-name">Driftwood</b></span></div>
+    <div class="toast" id="toast" role="status"></div>
+    <div class="damage-flash" id="damage-flash"></div>
+    <div class="crosshair">＋</div>
+    <nav class="bottom-ui">
+      <div class="hotbar glass"><div class="hotbar-label">QUICK ACCESS <span>1 — 5</span></div><div class="slots" id="hotbar-slots"></div></div>
+      <div class="action-dock"><button class="action-button" id="interact-btn"><span>↗</span><small>INTERACT</small><kbd>E</kbd></button><button class="action-button attack-action" id="attack-btn"><span>⚔</span><small>ATTACK</small><kbd>F</kbd></button><button class="action-button" id="build-btn"><span>⌂</span><small>BUILD</small><kbd>B</kbd></button><button class="action-button" id="craft-btn"><span>⌘</span><small>CRAFT</small><kbd>C</kbd></button><button class="action-button" id="inventory-btn"><span>▤</span><small>BAG</small><kbd>I</kbd></button></div>
+    </nav>
+    <div class="mobile-controls"><div class="joystick" id="joystick"><div class="joy-knob" id="joy-knob"></div></div><div class="mobile-actions"><button id="mobile-jump">↑</button><button id="mobile-attack">⚔</button><button id="mobile-use">E</button></div></div>
+    <div class="overlay" id="panel-overlay"><section class="game-panel glass" id="game-panel"><button class="close-panel" id="close-panel">×</button><div id="panel-content"></div></section></div>
+    <div class="toast-save" id="save-indicator">PROGRESS SAVED</div>
+    <div class="controls-tip"><kbd>WASD</kbd> MOVE <span>·</span> <kbd>E</kbd> INTERACT <span>·</span> <kbd>F</kbd> ATTACK <span>·</span> <kbd>SHIFT</kbd> SPRINT</div>
+  </main>
+  <script src="./game.js"></script>
+</body>
+</html>
